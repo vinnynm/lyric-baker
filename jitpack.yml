@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 jdk:
   - openjdk17
+=======
+jdk:
+  - openjdk17
+>>>>>>> d7eb603edccd6cc4593c1703927ee5ec08770519
