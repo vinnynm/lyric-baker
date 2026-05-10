@@ -1,36 +1,34 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.android)
     `maven-publish`
 }
 
 android {
     namespace = "com.enigma.devlyric"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
-       minSdk = 24
-      }
+        minSdk = 21
+    }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    buildFeatures {
-        compose = true
+
+    kotlin {
+        jvmToolchain(17)
     }
 
     publishing {
-        singleVariant("release"){
+        singleVariant("release") {
             withSourcesJar()
             withJavadocJar()
         }
@@ -40,8 +38,11 @@ android {
 afterEvaluate {
     publishing {
         publications {
-            create<MavenPublication>("maven") {
+            create<MavenPublication>("release") {
                 from(components["release"])
+                groupId = "com.github.vinnyknm"
+                artifactId = "lyric-baker"
+                version = "1.0.0"
                 pom {
                     name.set("lyric-baker")
                     description.set("Kotlin library for baking lyric files directly into MP3 and M4A audio files")
@@ -59,22 +60,7 @@ afterEvaluate {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-
+    // This library only uses stdlib — no Android UI dependencies needed
     testImplementation(kotlin("test"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
 }
